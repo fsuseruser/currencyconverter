@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Convert AED millions into currency crores with automatically refreshed exchange rates.">
+  <title>AED Million to Crore Converter</title>
+  <style>
+    :root {
+      --bg: #f4f5f2;
+      --surface: #ffffff;
+      --ink: #17211d;
+      --muted: #738078;
+      --line: #e3e8e3;
+      --accent: #315c49;
+      --accent-soft: #eaf1ec;
+      --shadow: 0 18px 50px rgba(28, 48, 37, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 36px 18px;
+      display: grid; place-items: center;
+      background: radial-gradient(circle at 15% 5%, #e8eee8 0, transparent 34%), var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .wrap { width: 100%; max-width: 620px; }
+    .eyebrow {
+      margin: 0 0 10px; color: var(--accent); font-size: 11px;
+      font-weight: 750; letter-spacing: .16em; text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(28px, 5vw, 40px); line-height: 1.12; letter-spacing: -.045em; }
+    .intro { margin: 12px 0 26px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .panel {
+      padding: clamp(22px, 5vw, 34px); background: var(--surface);
+      border: 1px solid rgba(220, 228, 220, .9); border-radius: 22px; box-shadow: var(--shadow);
+    }
+    label { display: block; margin: 0 0 9px; color: #526057; font-size: 12px; font-weight: 700; }
+    .field { margin-bottom: 22px; }
+    input, select {
+      width: 100%; min-height: 56px; padding: 0 16px;
+      border: 1px solid var(--line); border-radius: 12px;
+      background: #fff; color: var(--ink); font: inherit; font-size: 17px;
+      outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(49, 92, 73, .11); }
+    .input-shell { position: relative; }
+    .input-shell input { padding-right: 92px; font-size: 22px; font-weight: 650; }
+    .unit {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 12px; font-weight: 700; pointer-events: none;
+    }
+    .result {
+      margin-top: 8px; padding: 23px; border-radius: 16px;
+      background: var(--accent-soft); border: 1px solid #dce8df;
+    }
+    .result-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .result-label { color: #52675a; font-size: 12px; font-weight: 700; }
+    .live {
+      display: inline-flex; align-items: center; gap: 6px; color: var(--accent);
+      font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #4b966c; }
+    .value {
+      margin: 13px 0 8px; color: #234a36; font-size: clamp(30px, 7vw, 43px);
+      font-weight: 750; letter-spacing: -.045em; line-height: 1.1; overflow-wrap: anywhere;
+    }
+    .subvalue { color: #617267; font-size: 12px; line-height: 1.5; }
+    .meta {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
+      margin-top: 20px; padding-top: 16px; border-top: 1px solid #d6e2d9;
+      color: #68776d; font-size: 11px;
+    }
+    .actions { display: flex; justify-content: flex-end; margin-top: 16px; }
+    button {
+      border: 0; background: transparent; color: var(--accent); cursor: pointer;
+      font: inherit; font-size: 12px; font-weight: 750; padding: 8px 0;
+    }
+    button:hover { text-decoration: underline; }
+    .foot { margin: 17px 3px 0; color: #879189; font-size: 11px; line-height: 1.6; }
+    .error { color: #9a563f; }
+    @media (max-width: 420px) {
+      body { padding: 24px 14px; }
+      .panel { border-radius: 18px; }
+      .result { padding: 19px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="eyebrow">Currency calculator</p>
+    <h1>AED Million to Crore</h1>
+    <p class="intro">Convert UAE Dirham amounts in millions into crores across major international currencies.</p>
+
+    <section class="panel" aria-label="AED million currency converter">
+      <div class="field">
+        <label for="amount">AMOUNT IN AED MILLIONS</label>
+        <div class="input-shell">
+          <input id="amount" type="number" min="0" step="any" value="24" inputmode="decimal" placeholder="Enter amount">
+          <span class="unit">AED MILLION</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="currency">CONVERT TO</label>
+        <select id="currency">
+          <option value="INR" selected>🇮🇳 INR — Indian Rupee</option>
+          <option value="LKR">🇱🇰 LKR — Sri Lankan Rupee</option>
+          <option value="USD">🇺🇸 USD — US Dollar</option>
+          <option value="GBP">🇬🇧 GBP — British Pound</option>
+          <option value="EUR">🇪🇺 EUR — Euro</option>
+          <option value="PKR">🇵🇰 PKR — Pakistani Rupee</option>
+          <option value="BDT">🇧🇩 BDT — Bangladeshi Taka</option>
+          <option value="SAR">🇸🇦 SAR — Saudi Riyal</option>
+          <option value="QAR">🇶🇦 QAR — Qatari Riyal</option>
+          <option value="KWD">🇰🇼 KWD — Kuwaiti Dinar</option>
+          <option value="OMR">🇴🇲 OMR — Omani Rial</option>
+          <option value="BHD">🇧🇭 BHD — Bahraini Dinar</option>
+          <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+          <option value="MYR">🇲🇾 MYR — Malaysian Ringgit</option>
+          <option value="PHP">🇵🇭 PHP — Philippine Peso</option>
+          <option value="THB">🇹🇭 THB — Thai Baht</option>
+          <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+          <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+          <option value="CHF">🇨🇭 CHF — Swiss Franc</option>
+          <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+          <option value="CNY">🇨🇳 CNY — Chinese Yuan</option>
+          <option value="HKD">🇭🇰 HKD — Hong Kong Dollar</option>
+          <option value="NZD">🇳🇿 NZD — New Zealand Dollar</option>
+          <option value="ZAR">🇿🇦 ZAR — South African Rand</option>
+          <option value="EGP">🇪🇬 EGP — Egyptian Pound</option>
+          <option value="NPR">🇳🇵 NPR — Nepalese Rupee</option>
+        </select>
+      </div>
+
+      <div class="result" aria-live="polite">
+        <div class="result-top">
+          <span class="result-label" id="resultLabel">VALUE IN INR CRORES</span>
+          <span class="live"><span class="dot"></span> Exchange rate</span>
+        </div>
+        <div class="value" id="result">₹ 61.22 Cr</div>
+        <div class="subvalue" id="fullValue">24 million AED converted to Indian Rupees</div>
+        <div class="meta">
+          <span id="rate">1 AED = fetching rate…</span>
+          <span id="updated">Loading exchange rates…</span>
+        </div>
+      </div>
+      <div class="actions"><button type="button" id="reset">Reset amount</button></div>
+    </section>
+
+    <p class="foot">“Crore” is calculated as 10 million units of the selected currency. Rates are indicative mid-market reference rates, not guaranteed bank or exchange-house quotes. The calculator refreshes rates when opened and can be refreshed manually by reloading the page.</p>
+    <p class="foot" id="status">Connecting to exchange-rate service…</p>
+  </main>
+
+  <script>
+    const fallbackRates = {
+      INR: 25.5377, LKR: 90.49, USD: 0.2723, GBP: 0.2049, EUR: 0.2450,
+      PKR: 75.4205, BDT: 34.01, SAR: 1.0211, QAR: 0.9912, KWD: 0.0838,
+      OMR: 0.1047, BHD: 0.1024, SGD: 0.346, MYR: 1.145, PHP: 15.85,
+      THB: 9.25, AUD: 0.418, CAD: 0.374, CHF: 0.213, JPY: 41.2,
+      CNY: 1.975, HKD: 2.13, NZD: 0.47, ZAR: 4.95, EGP: 13.1, NPR: 40.7
+    };
+    const symbols = {
+      INR: "₹", LKR: "Rs.", USD: "$", GBP: "£", EUR: "€", PKR: "Rs.",
+      BDT: "৳", SAR: "﷼", QAR: "﷼", KWD: "د.ك", OMR: "ر.ع.", BHD: "د.ب",
+      SGD: "S$", MYR: "RM", PHP: "₱", THB: "฿", AUD: "A$", CAD: "C$",
+      CHF: "CHF", JPY: "¥", CNY: "¥", HKD: "HK$", NZD: "NZ$", ZAR: "R",
+      EGP: "E£", NPR: "रु"
+    };
+    const names = {
+      INR: "Indian Rupees", LKR: "Sri Lankan Rupees", USD: "US Dollars",
+      GBP: "British Pounds", EUR: "Euros", PKR: "Pakistani Rupees",
+      BDT: "Bangladeshi Taka", SAR: "Saudi Riyals", QAR: "Qatari Riyals",
+      KWD: "Kuwaiti Dinars", OMR: "Omani Rials", BHD: "Bahraini Dinars",
+      SGD: "Singapore Dollars", MYR: "Malaysian Ringgit", PHP: "Philippine Pesos",
+      THB: "Thai Baht", AUD: "Australian Dollars", CAD: "Canadian Dollars",
+      CHF: "Swiss Francs", JPY: "Japanese Yen", CNY: "Chinese Yuan",
+      HKD: "Hong Kong Dollars", NZD: "New Zealand Dollars", ZAR: "South African Rand",
+      EGP: "Egyptian Pounds", NPR: "Nepalese Rupees"
+    };
+    let rates = { ...fallbackRates };
+    let live = false;
+
+    const amountInput = document.getElementById("amount");
+    const currencySelect = document.getElementById("currency");
+    const result = document.getElementById("result");
+    const fullValue = document.getElementById("fullValue");
+    const rateText = document.getElementById("rate");
+    const updatedText = document.getElementById("updated");
+    const statusText = document.getElementById("status");
+
+    function formatNumber(value, maximumFractionDigits = 2) {
+      return new Intl.NumberFormat("en-IN", {
+        maximumFractionDigits,
+        minimumFractionDigits: 2
+      }).format(value);
+    }
+
+    function calculate() {
+      const amount = Number(amountInput.value);
+      const code = currencySelect.value;
+      const rate = rates[code];
+      document.getElementById("resultLabel").textContent = `VALUE IN ${code} CRORES`;
+
+      if (!Number.isFinite(amount) || amount < 0 || amountInput.value.trim() === "") {
+        result.textContent = "Enter a valid amount";
+        fullValue.textContent = "";
+        return;
+      }
+      if (!rate) {
+        result.textContent = "Rate unavailable";
+        fullValue.textContent = "Try another currency or refresh the page.";
+        return;
+      }
+
+      const total = amount * 1000000 * rate;
+      const crores = total / 10000000;
+      const symbol = symbols[code] || code;
+      result.textContent = `${symbol} ${formatNumber(crores)} Cr`;
+      fullValue.textContent = `${formatNumber(total, 0)} ${names[code]}`;
+      rateText.textContent = `1 AED = ${formatNumber(rate, 5)} ${code}`;
+    }
+
+    async function loadRates() {
+      try {
+        const response = await fetch("https://open.er-api.com/v6/latest/AED", { cache: "no-store" });
+        if (!response.ok) throw new Error("Rate service unavailable");
+        const data = await response.json();
+        if (data.result !== "success" || !data.rates) throw new Error("Invalid rate response");
+        Object.keys(fallbackRates).forEach(code => {
+          if (Number.isFinite(data.rates[code])) rates[code] = data.rates[code];
+        });
+        live = true;
+        const date = data.time_last_update_utc
+          ? new Date(data.time_last_update_utc).toLocaleString()
+          : new Date().toLocaleString();
+        updatedText.textContent = `Updated: ${date}`;
+        statusText.textContent = "Rates loaded successfully.";
+        statusText.classList.remove("error");
+      } catch (error) {
+        updatedText.textContent = "Using fallback reference rates";
+        statusText.textContent = "Live rates could not be loaded. Showing indicative fallback rates; check your internet connection.";
+        statusText.classList.add("error");
+      }
+      calculate();
+    }
+
+    amountInput.addEventListener("input", calculate);
+    currencySelect.addEventListener("change", calculate);
+    document.getElementById("reset").addEventListener("click", () => {
+      amountInput.value = "24";
+      currencySelect.value = "INR";
+      calculate();
+    });
+
+    calculate();
+    loadRates();
+  </script>
+</body>
+</html>
